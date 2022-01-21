@@ -1,0 +1,46 @@
+/*toolbar*/
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+mat-toolbar {
+  position: absolute;
+  top: 0px;
+  z-index: 1;
+}
+
+/*slide nav bar*/
+.example-container {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0px;
+  padding-top: 64px;
+  z-index: 0;
+}
+
+mat-drawer {
+  height: 100%;
+  position: absolute;
+  top: 0px;
+  padding-top: 84px !important;
+  width: 320px;
+  z-index: 0;
+}
+
+.example-sidenav-content {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.example-sidenav {
+  padding: 20px;
+}
+
+/* video */
+video {
+  width: 700px;
+  height: 500px;
+}
