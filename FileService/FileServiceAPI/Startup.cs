@@ -71,7 +71,7 @@ namespace FileServiceAPI
 
             app.UseCors(_myPolicyCors);
 
-            app.UseMiddleware<RequestMiddleware>();
+            //app.UseMiddleware<RequestMiddleware>();
 
             app.UseAuthorization();
 

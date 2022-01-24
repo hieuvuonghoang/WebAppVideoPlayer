@@ -32,18 +32,43 @@
   </mat-drawer>
 
   <div class="example-sidenav-content">
-    <video controls crossorigin="anonymous">
-      <source
-        type="video/mp4"
-        src="https://14.232.208.178:2023/api/filemanager/download-phim-anh?pathFile=EVN01001\dohoang\05.mp4"
-      />
-      <track
-        label="English"
-        kind="subtitles"
-        srclang="en"
-        src="https://14.232.208.178:2023/api/filemanager/download-phim-anh?pathFile=EVN01001\dohoang\X Men 2000 720p BrRip x264 YIFY-English.vtt"
-        default
-      />
-    </video>
+    <!-- <app-phim></app-phim> -->
+    <mat-card *ngFor="let phim of phims">
+      <mat-card-subtitle>{{ phim.TENPHIM }}</mat-card-subtitle>
+      <app-vjs-player
+        [options]="{
+          autoplay: true,
+          controls: true,
+          sources: [
+            {
+              src: 'http://14.232.208.178:1996/api/filemanager/download?pathFile=7.X-Men.Days.of.Future.Past.2014.1080p.WEB-DL.DD5.1.H264-RARBG.mkv',
+              type: 'video/mp4'
+            }
+          ],
+          width: 450,
+          height: 250,
+          tracks: [
+            {
+              kind: 'subtitles',
+              mode: 'showing',
+              srclang: 'vn',
+              src: 'http://14.232.208.178:1996/api/filemanager/download?pathFile=7.X-Men.Days.of.Future.Past.2014.1080p.WEB-DL.DD5.1.H264-RARBG.mkv.vtt',
+              default: true,
+              label: 'VN'
+            }
+          ]
+        }"
+      ></app-vjs-player>
+      <!-- <video controls crossorigin="anonymous">
+        <source type="video/mp4" [src]="phim.URL" />
+        <track
+          srclang="en"
+          label="English"
+          kind="subtitles"
+          [src]="phim.URLSUBTITLE"
+          default
+        />
+      </video> -->
+    </mat-card>
   </div>
 </mat-drawer-container>

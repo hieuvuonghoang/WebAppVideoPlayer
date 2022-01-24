@@ -1,0 +1,8 @@
+mat-grid-tile {
+  background: lightblue;
+  border: 2px solid red;
+}
+
+.mat-grid-tile-content {
+  padding: 10px;
+}

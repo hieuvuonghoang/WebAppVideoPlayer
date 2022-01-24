@@ -4,6 +4,7 @@ using FileServiceAPI.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -11,7 +12,6 @@ namespace FileServiceAPI.Controller
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class FileManagerController : ControllerBase
     {
         private readonly IFileService _fileService;
@@ -27,8 +27,7 @@ namespace FileServiceAPI.Controller
 
         #region "Phim ảnh"
 
-        [HttpGet("download-phim-anh")]
-        [AllowAnonymous]
+        [HttpGet("download")]
         public ActionResult Download(string pathFile)
         {
             var path = Path.Combine(_appSettings.PhimAnhStoredFilesPath, pathFile);
@@ -37,12 +36,12 @@ namespace FileServiceAPI.Controller
             return PhysicalFile(path, mimeType, fileName, true);
         }
 
-        [HttpPost("upload-phim-anh")]
+        [HttpPost("upload")]
         public async Task<IActionResult> UploadPhimAnhAsync(IFormFile file)
         {
             var nguoiDung = (HT_NGUOIDUNG)HttpContext.Items[_appSettings.KeyNameNguoiDung];
             var pathDir = Path.Combine(_appSettings.PhimAnhStoredFilesPath, nguoiDung.MADONVI, nguoiDung.TENTK);
-            if(!Directory.Exists(pathDir))
+            if (!Directory.Exists(pathDir))
             {
                 Directory.CreateDirectory(pathDir);
             }
@@ -55,7 +54,7 @@ namespace FileServiceAPI.Controller
             return Ok(new { fileName = file.FileName });
         }
 
-        [HttpPost("merge-file-phim-anh")]
+        [HttpPost("merge")]
         public IActionResult MergeFile(MergeFileModel mergeFileModel)
         {
             var nguoiDung = (HT_NGUOIDUNG)HttpContext.Items[_appSettings.KeyNameNguoiDung];
@@ -71,44 +70,22 @@ namespace FileServiceAPI.Controller
             });
         }
 
-        #endregion
-
-        #region "Biểu mẫu"
-
-        [HttpGet("download-bieu-mau")]
-        [AllowAnonymous]
-        public ActionResult DownloadBieuMau(string pathFile)
+        [HttpGet("get-all-file")]
+        public ActionResult GetAllFile()
         {
-            var path = Path.Combine(_appSettings.BieuMauStoredFilesPath, pathFile);
-            var fileName = Path.GetFileName(path);
-            var mimeType = _mimeService.GetMimeType(Path.GetExtension(path));
-            return PhysicalFile(path, mimeType, fileName, true);
-        }
-
-        [HttpPost("upload-bieu-mau")]
-        public async Task<IActionResult> UploadBieuMauAsync(IFormFile file)
-        {
-            var nguoiDung = (HT_NGUOIDUNG)HttpContext.Items[_appSettings.KeyNameNguoiDung];
-            var pathDir = Path.Combine(_appSettings.BieuMauStoredFilesPath, nguoiDung.MADONVI, nguoiDung.TENTK);
-            if (!Directory.Exists(pathDir))
+            var dir = new DirectoryInfo(_appSettings.PhimAnhStoredFilesPath);
+            var files = dir.GetFiles("*.mkv");
+            var fileNames = new List<string>();
+            foreach (var file in files)
             {
-                Directory.CreateDirectory(pathDir);
+                fileNames.Add(file.Name);
             }
-            var pathFile = Path.Combine(pathDir, file.FileName);
-            using (var fileStream = new FileStream(pathFile, FileMode.Create, FileAccess.Write))
-            {
-                await file.CopyToAsync(fileStream);
-                fileStream.Close();
-            }
-            var pathFileDownload = Path.Combine(nguoiDung.MADONVI, nguoiDung.TENTK, file.FileName);
-            var linkFile = _appSettings.LinkFileService + $"/filemanager/download-bieu-mau?pathFile={pathFileDownload}";
-            return Ok(new
-            {
-                linkFile = linkFile,
-            });
+            return Ok(fileNames);
         }
 
         #endregion
+
+        
 
     }
 }

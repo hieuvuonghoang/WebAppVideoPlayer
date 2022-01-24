@@ -39,8 +39,17 @@ mat-drawer {
   padding: 20px;
 }
 
+mat-card {
+  max-width: 600px;
+}
+
+.mat-card-subtitle {
+  margin: 0px !important;
+}
+
 /* video */
-video {
-  width: 700px;
-  height: 500px;
+mat-card {
+  margin: 10px;
+  align-items: center;
+  justify-content: center;
 }
